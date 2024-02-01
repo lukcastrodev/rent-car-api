@@ -1,6 +1,7 @@
 package com.ctech.rentcarapi.models;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +14,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
@@ -41,6 +44,14 @@ public class Car {
     @NotNull
     @Length(max = 10)
     private String condition;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date rentDate;
+    
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date expirationDate;
+
+    private Boolean isRented = false;
 
     @ManyToMany(mappedBy = "cars", cascade = CascadeType.ALL)
     private List<User> users = new ArrayList<>();
@@ -99,5 +110,29 @@ public class Car {
 
     public List<User> getUsers() {
         return this.users;
+    }
+
+    public void setRentDate(Date rentDate) {
+        this.rentDate = rentDate;
+    }
+
+    public Date getRentDate() {
+        return this.rentDate;
+    }
+
+    public void setExpirationDate(Date expirationDate) {
+        this.expirationDate = expirationDate;
+    }
+
+    public Date getExpirationDate() {
+        return this.expirationDate;
+    }
+
+    public void setRented(Boolean isRented) {
+        this.isRented = isRented;
+    }
+
+    public Boolean isRented() {
+        return this.isRented;
     }
 }
