@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.ctech.rentcarapi.dtos.CarDTO;
+import com.ctech.rentcarapi.dtos.RentCarDTO;
 import com.ctech.rentcarapi.dtos.UserDTO;
 import com.ctech.rentcarapi.dtos.mappers.CarMapper;
 import com.ctech.rentcarapi.dtos.mappers.UserMapper;
@@ -16,7 +17,6 @@ import com.ctech.rentcarapi.repositories.CarRepository;
 import com.ctech.rentcarapi.repositories.UserRepository;
 
 import jakarta.transaction.Transactional;
-import jakarta.validation.constraints.NotNull;
 
 @Service
 public class RentCarService {
@@ -38,18 +38,20 @@ public class RentCarService {
     }
 
     @Transactional
-    public void rentCar(
-            @NotNull Long userId, 
-            @NotNull Long carId){
+    public void rentCar(RentCarDTO rent){
         
-        User user = this.userRepository.findById(userId)
-                .orElseThrow(() -> new RecordNotFoundException(userId));
+        User user = this.userRepository.findById(rent.userId())
+                .orElseThrow(() -> new RecordNotFoundException(rent.userId()));
         
-        Car car = this.carRepository.findById(carId)
-                .orElseThrow(() -> new RecordNotFoundException(carId));
+        Car car = this.carRepository.findById(rent.carId())
+                .orElseThrow(() -> new RecordNotFoundException(rent.carId()));
         
         user.getCars().add(car);
         car.getUsers().add(user);
+ 
+        car.setRentDate(rent.rentDate());
+        car.setExpirationDate(rent.expirationDate());
+        car.setRented(true);
         
         this.userRepository.save(user);
         this.carRepository.save(car);
@@ -73,5 +75,22 @@ public class RentCarService {
                 .stream()
                 .map(carMapper::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    public void cancelRent(Long userId, Long carId){
+        User user = this.userRepository.findById(userId)
+                .orElseThrow(() -> new RecordNotFoundException(userId));
+
+        Car car = this.carRepository.findById(carId)
+                .orElseThrow(() -> new RecordNotFoundException(carId));
+
+        user.getCars().remove(car);
+        car.getUsers().remove(user);
+        car.setRentDate(null);
+        car.setExpirationDate(null);
+        car.setRented(false);
+
+        this.userRepository.save(user);
+        this.carRepository.save(car);
     }
 }
