@@ -7,9 +7,7 @@ import jakarta.validation.constraints.NotNull;
 
 import org.springframework.web.bind.annotation.*;
 
-import com.ctech.rentcarapi.dtos.CarDTO;
 import com.ctech.rentcarapi.dtos.UserDTO;
-import com.ctech.rentcarapi.services.RentCarService;
 import com.ctech.rentcarapi.services.UserService;
 
 @RestController
@@ -17,13 +15,9 @@ import com.ctech.rentcarapi.services.UserService;
 public class UserController {
 
     private final UserService userService;
-    private final RentCarService rentCarService;
 
-    public UserController(
-        UserService userService,
-        RentCarService rentCarService){
+    public UserController(UserService userService){
         this.userService = userService;
-        this.rentCarService = rentCarService;
     }
     
     @GetMapping
@@ -39,19 +33,6 @@ public class UserController {
     @PostMapping
     public UserDTO create(@RequestBody @NotNull UserDTO user) {
         return this.userService.create(user);
-    }
-    
-    @GetMapping("/rented-car/{id}")
-    public List<CarDTO> listCarsByUserId(@PathVariable @NotNull Long id) {
-        return this.rentCarService.findCarsByUserId(id);
-    }
-
-    @PostMapping("rent-car/{userId}/{carId}")
-    public void rentCar(
-            @PathVariable @NotNull Long userId,
-            @PathVariable @NotNull Long carId
-    ) {
-        this.rentCarService.rentCar(userId, carId);
     }
     
     @PatchMapping("/{id}")
