@@ -1,16 +1,9 @@
 package com.ctech.rentcarapi.models;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
@@ -38,14 +31,6 @@ public class User {
 
     @NotNull
     private String password;
-
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-        name = "users_cars",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "car_id")
-    )
-    private List<Car> cars = new ArrayList<>();
 
     public void setId(Long id) {
         this.id = id;
@@ -84,13 +69,5 @@ public class User {
 
     public String getPassword(){
         return this.password;
-    }
-
-    public void setCars(List<Car> cars){
-        this.cars = cars;
-    }
-
-    public List<Car> getCars(){
-        return this.cars;
     }
 }

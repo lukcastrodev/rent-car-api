@@ -2,17 +2,14 @@ package com.ctech.rentcarapi.models;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.hibernate.validator.constraints.Length;
 
-import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -28,33 +25,30 @@ public class Car {
 
     @NotNull
     @Length(min = 3, max = 100)
+    @Column
     private String brand;
     
     @NotNull
     @Length(min = 3, max = 100)
+    @Column
     private String model;
     
     @NotNull
     @Length(max = 4)
+    @Column
     private String year;
 
     @NotNull
+    @Column
     private BigDecimal fuel;
 
     @NotNull
     @Length(max = 10)
+    @Column
     private String condition;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date rentDate;
-    
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date expirationDate;
-
+    @Column
     private Boolean isRented = false;
-
-    @ManyToMany(mappedBy = "cars", cascade = CascadeType.ALL)
-    private List<User> users = new ArrayList<>();
 
     public void setId(Long id){
         this.id = id;
@@ -102,30 +96,6 @@ public class Car {
 
     public String getCondition() {
         return this.condition;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
-    }
-
-    public List<User> getUsers() {
-        return this.users;
-    }
-
-    public void setRentDate(Date rentDate) {
-        this.rentDate = rentDate;
-    }
-
-    public Date getRentDate() {
-        return this.rentDate;
-    }
-
-    public void setExpirationDate(Date expirationDate) {
-        this.expirationDate = expirationDate;
-    }
-
-    public Date getExpirationDate() {
-        return this.expirationDate;
     }
 
     public void setRented(Boolean isRented) {
