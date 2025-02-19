@@ -1,6 +1,7 @@
 package com.ctech.rentcarapi.services;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import jakarta.validation.Valid;
@@ -9,6 +10,7 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;
 
 import com.ctech.rentcarapi.dtos.UserDTO;
+import com.ctech.rentcarapi.dtos.UserUpdateDTO;
 import com.ctech.rentcarapi.dtos.mappers.UserMapper;
 import com.ctech.rentcarapi.exceptions.RecordNotFoundException;
 import com.ctech.rentcarapi.repositories.UserRepository;
@@ -41,13 +43,13 @@ public class UserService {
         return this.userMapper.toDTO(this.userRepository.save(this.userMapper.toEntity(user)));
     }
 
-    public UserDTO update(Long id,
-                           UserDTO user){
+    public UserDTO update(Long id, UserUpdateDTO user){
         return this.userRepository.findById(id)
                 .map(recordFound -> {
-                    recordFound.setName(user.name());
-                    recordFound.setLastname(user.lastname());
-                    recordFound.setNickname(user.nickname());
+                    Optional.ofNullable(user.name()).ifPresent(recordFound::setName);
+                    Optional.ofNullable(user.lastname()).ifPresent(recordFound::setLastname);
+                    Optional.ofNullable(user.nickname()).ifPresent(recordFound::setNickname);
+          
                     return this.userMapper.toDTO(this.userRepository.save(recordFound));
                 }).orElseThrow(() -> new RecordNotFoundException(id));
     }
