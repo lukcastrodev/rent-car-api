@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.web.bind.annotation.*;
 
 import com.ctech.rentcarapi.dtos.UserDTO;
+import com.ctech.rentcarapi.dtos.UserUpdateDTO;
 import com.ctech.rentcarapi.services.UserService;
 
 @RestController
@@ -36,7 +37,7 @@ public class UserController {
     }
     
     @PatchMapping("/{id}")
-    public UserDTO update(@PathVariable @NotNull Long id, @RequestBody @Valid @NotNull UserDTO user) {
+    public UserDTO update(@PathVariable @NotNull Long id, @RequestBody @Valid @NotNull UserUpdateDTO user) {
         return this.userService.update(id, user);
     }
 
